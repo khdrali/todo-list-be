@@ -101,23 +101,29 @@ const getUpdateData = async (req, res) => {
 const getDeleteData = async (req, res) => {
   try {
     const { id } = req.params;
-    // const { authorization } = req.headers;
+    const { authorization } = req.headers;
 
-    // //decode jwt token
-    // const decoded = decodedToken(authorization);
-    // //get user id from jwt token
-    // const userIdToken = decoded?.id;
-
-    // //check user id
-    // const checkUserId = await users.getAllUser({ id: userIdToken });
-    // if (checkUserId.length < 1) {
-    //   throw { code: 400, message: "User Doesnt Exist!" };
-    // }
-
-    const getData = await todo.getAllData({ id });
+    const getData = await todo.getDataById({ id });
     if (getData.length < 1) {
       throw { code: 404, message: "Data Not Found" };
     }
+
+    //decode jwt token
+    const decoded = decodedToken(authorization);
+    //get user id from jwt token
+    const userIdToken = decoded?.id;
+
+    //check user id
+    const checkUserId = await users.getAllUser({ id: userIdToken });
+    if (checkUserId.length < 1) {
+      throw { code: 400, message: "User Doesnt Exist!" };
+    }
+
+    // if (getData[0].createby !== checkUserId) {
+    //   throw { code: 400, message: "Data Not Found" };
+    // }
+    console.log(checkUserId);
+    console.log(getData);
 
     await todo.deleteData({ id });
     res.status(200).json({

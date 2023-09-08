@@ -4,6 +4,11 @@ const getAllData = async (params) => {
   return await db`SELECT * FROM data`;
 };
 
+const getDataById = async (params) => {
+  const { id } = params;
+  return await db`SELECT * FROM data WHERE id=${id}`;
+};
+
 const createData = async (params) => {
   const { list, description, createby } = params;
   return await db`INSERT INTO data(list,description,createby) VALUES(${list},${description},${createby})RETURNING id`;
@@ -23,4 +28,10 @@ const deleteData = async (params) => {
   return await db`DELETE FROM data WHERE id=${id}`;
 };
 
-module.exports = { getAllData, createData, updateData, deleteData };
+module.exports = {
+  getAllData,
+  createData,
+  updateData,
+  deleteData,
+  getDataById,
+};
